@@ -40,3 +40,19 @@ func (lv *ListViewCtrl) GetRows() int {
 	rows := api.SendMessage(lv.HWnd, api.LVM_GETITEMCOUNT, 0, 0)
 	return int(rows)
 }
+
+// GetCols get listView items cloumns
+func (lv *ListViewCtrl) GetCols() int {
+	if lv.HWnd == 0 {
+		fmt.Printf("error info - %s hwnd：%08X\n", lv.Description, lv.HWnd)
+		return 0
+	}
+	//第二个参数是 LVM_GETHEADER,获得LISTVIEW的HEADER句柄
+	var lngHeaderHwnd api.HWND
+	lngHeaderHwnd = (api.HWND)(api.SendMessage(lv.HWnd, api.LVM_GETHEADER, 0, 0))
+	if lngHeaderHwnd > 0 {
+		lngCols := api.SendMessage(lngHeaderHwnd, api.HDM_GETITEMCOUNT, 0, 0) //获取ListView表头项目数
+		return int(lngCols)
+	}
+	return 1
+}

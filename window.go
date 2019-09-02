@@ -42,8 +42,8 @@ func (w *Window) Detect() *Window {
 		w.Opend = true
 	} else {
 		w.Opend = false
+		fmt.Printf("Can't detect window: %s\n", w.Title)
 	}
-	fmt.Printf("Can't detect window:%s\n", w.Title)
 	return w
 }
 
