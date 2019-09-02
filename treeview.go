@@ -36,6 +36,11 @@ func NewTreeViewCtrl(ctrl Control) *TreeViewCtrl {
 	}
 }
 
+// ItemHeight Item Height
+func (tv *TreeViewCtrl) ItemHeight() int {
+	return int(api.SendMessage(tv.HWnd, api.TVM_GETITEMHEIGHT, 0, 0))
+}
+
 // Init init object
 func (tv *TreeViewCtrl) Init() *TreeViewCtrl {
 	if tv != nil {

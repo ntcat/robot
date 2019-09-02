@@ -180,3 +180,49 @@ func (w *Window) Close() {
 		w.Detect()
 	}
 }
+func (w *Window) hasStyleBits(bits uint32) bool {
+	return hasWindowLongBits(w.HWnd, api.GWL_STYLE, bits)
+}
+
+func (w *Window) hasExtendedStyleBits(bits uint32) bool {
+	return hasWindowLongBits(w.HWnd, api.GWL_EXSTYLE, bits)
+}
+
+func hasWindowLongBits(hwnd api.HWND, index int32, bits uint32) bool {
+	value := uint32(api.GetWindowLong(hwnd, index))
+
+	return value&bits == bits
+}
+
+func setWindowVisible(hwnd api.HWND, visible bool) {
+	var cmd int32
+	if visible {
+		cmd = api.SW_SHOWNA
+	} else {
+		cmd = api.SW_HIDE
+	}
+	api.ShowWindow(hwnd, cmd)
+}
+
+// BringToTop moves the *Window to the top of the keyboard focus order.
+func (w *Window) BringToTop() error {
+	if !api.SetWindowPos(w.HWnd, api.HWND_TOP, 0, 0, 0, 0, api.SWP_NOACTIVATE|api.SWP_NOMOVE|api.SWP_NOSIZE) {
+		return lastError("SetWindowPos")
+	}
+
+	return nil
+}
+
+// Focused returns whether the Window has the keyboard input focus.
+func (w *Window) Focused() bool {
+	return w.HWnd == api.GetFocus()
+}
+
+// SetFocus sets the keyboard input focus to the *Window.
+func (w *Window) SetFocus() error {
+	if api.SetFocus(w.HWnd) == 0 {
+		return lastError("SetFocus")
+	}
+
+	return nil
+}

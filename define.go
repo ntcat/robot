@@ -25,6 +25,8 @@ type Window struct {
 	Opend       bool
 	Description string
 	OpenTimeOut int
+	visible     bool
+	enabled     bool
 	Controls    map[int]Control //它的值是动态变化的，界面不同呈现的控制也不同
 	BeforeOpen  func()          // 窗口打开前的回调函数
 	AfterOpen   func()          // 窗口打开后的回调函数
