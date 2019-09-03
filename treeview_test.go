@@ -21,6 +21,7 @@ func TestTreeViewClick(t *testing.T) {
 	ctrl := w.GetControlByTitleClassRect("", "SysTreeView32", 2, 24, -1, -1)
 	tv := NewTreeView(ctrl)
 	var processID uint32
-	api.GetWindowThreadProcessId(tv.HWnd,&processID)
+	api.GetWindowThreadProcessId(tv.HWnd, &processID)
+	process := OpenProcess(PROCESS_ALL_ACCESS, FALSE, PID)
 	fmt.Printf("hight:%d\n", h)
 }
