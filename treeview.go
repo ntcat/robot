@@ -17,17 +17,17 @@ import (
 
 */
 
-// TreeViewCtrl TreeView Ctrl
-type TreeViewCtrl struct {
+// TreeView TreeView Ctrl
+type TreeView struct {
 	Control
 	Items     map[string][]int
 	ItemHight int
 	IconWidth int
 }
 
-// NewTreeViewCtrl 新建类
-func NewTreeViewCtrl(ctrl Control) *TreeViewCtrl {
-	return &TreeViewCtrl{
+// NewTreeView 新建类
+func NewTreeView(ctrl Control) *TreeView {
+	return &TreeView{
 		Control:   ctrl,
 		ItemHight: 20,
 		IconWidth: 30,
@@ -36,13 +36,14 @@ func NewTreeViewCtrl(ctrl Control) *TreeViewCtrl {
 	}
 }
 
-// ItemHeight Item Height
-func (tv *TreeViewCtrl) ItemHeight() int {
-	return int(api.SendMessage(tv.HWnd, api.TVM_GETITEMHEIGHT, 0, 0))
+// GetItemHeight get Item Height,=20
+func (tv *TreeView) GetItemHeight() int {
+	tv.ItemHight = int(api.SendMessage(tv.HWnd, api.TVM_GETITEMHEIGHT, 0, 0))
+	return tv.ItemHight
 }
 
 // Init init object
-func (tv *TreeViewCtrl) Init() *TreeViewCtrl {
+func (tv *TreeView) Init() *TreeView {
 	if tv != nil {
 		tv.AddItem("买入", []int{0})
 		tv.AddItem("卖出", []int{1})
@@ -58,12 +59,12 @@ func (tv *TreeViewCtrl) Init() *TreeViewCtrl {
 }
 
 // AddItem 格式：AddItem("当日成交",[]int{9,3}) 代表第一级菜单在第9个，第二级在第3个
-func (tv *TreeViewCtrl) AddItem(key string, value []int) {
+func (tv *TreeView) AddItem(key string, value []int) {
 	tv.Items[key] = value
 }
 
 // ClickItem 点击TV项
-func (tv *TreeViewCtrl) ClickItem(key string) {
+func (tv *TreeView) ClickItem(key string) {
 	if tv == nil || tv.HWnd == 0 {
 		fmt.Printf("error TreeView ClickItem - %s hwnd：%08X\n", tv.Description, tv.HWnd)
 		return

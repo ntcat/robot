@@ -205,12 +205,12 @@ func setWindowVisible(hwnd api.HWND, visible bool) {
 }
 
 // BringToTop moves the *Window to the top of the keyboard focus order.
-func (w *Window) BringToTop() error {
+func (w *Window) BringToTop() uint32 {
 	if !api.SetWindowPos(w.HWnd, api.HWND_TOP, 0, 0, 0, 0, api.SWP_NOACTIVATE|api.SWP_NOMOVE|api.SWP_NOSIZE) {
-		return lastError("SetWindowPos")
+		return api.GetLastError()
 	}
 
-	return nil
+	return 0
 }
 
 // Focused returns whether the Window has the keyboard input focus.
