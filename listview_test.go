@@ -11,7 +11,9 @@ func TestListView(t *testing.T) {
 	w.Detect().GetControls()
 	ctrl := w.GetControlByTitleClassRect("FolderView", "SysListView32", -1, -1, -1, -1)
 	lv := NewListView(ctrl)
-	rows := lv.Init("test").GetRows()
-	cols := lv.Init("test").GetCols()
+
+	lv = lv.Init("test")
+	rows := lv.GetRows()
+	cols, _ := lv.GetCols()
 	fmt.Printf("Row:%d - Col:%d\n", rows, cols)
 }
