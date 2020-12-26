@@ -42,7 +42,7 @@ func (lv *ListViewCtrl) GetRows() int {
 // GetCols get ListViewCtrl items cloumns
 func (lv *ListViewCtrl) GetCols() (int, error) {
 	if lv.HWND == 0 {
-		return 0, ErrHWND
+		return 0, errHWND
 	}
 	//第二个参数是 LVM_GETHEADER,获得ListViewCtrl的HEADER句柄
 	var lngHeaderHWND api.HWND

@@ -5,7 +5,6 @@ import (
 
 	"github.com/go-vgo/robotgo"
 	api "github.com/ntcat/win32api"
-	gui "github.com/ntcat/win32gui"
 )
 
 // EnumResoultCallBack 枚举结果回调函数，写成一个类型，有助于理解
@@ -24,7 +23,7 @@ func NewWindow(title, class string) *Window {
 	return &Window{
 		Title:       title,
 		Class:       class,
-		HWnd:        0,
+		HWND:        0,
 		Opend:       false,
 		OpenTimeOut: 100,
 		BeforeOpen:  func() {}, //can't set nil
@@ -35,10 +34,10 @@ func NewWindow(title, class string) *Window {
 
 }
 
-// Detect Detect HWnd
+// Detect Detect HWND
 func (w *Window) Detect() *Window {
-	w.HWnd = gui.FindWindow(w.Class, w.Title)
-	if w.HWnd > 0 {
+	w.HWND = FindWindow(w.Class, w.Title)
+	if w.HWND > 0 {
 		w.Opend = true
 	} else {
 		w.Opend = false
@@ -50,19 +49,19 @@ func (w *Window) Detect() *Window {
 // GetControls Get Controls of window, store in map
 // 界面变动时，控件也会变化，就需要重新搜索重建一下
 func (w *Window) GetControls() {
-	if w.HWnd > 0 {
+	if w.HWND > 0 {
 		w.Controls = make(map[int]Control) //放在EnumResoult中意味着每次调用都初始化
-		EnumResoult = func(i int, hWnd, hWndParent api.HWND, class, title string, c api.RECT) {
+		EnumResoult = func(i int, HWND, HWNDParent api.HWND, class, title string, c api.RECT) {
 			w.Controls[i] = Control{
 				Index:      i,
 				Title:      title,
 				Class:      class,
-				HWndParent: hWndParent,
-				HWnd:       hWnd,
+				HWNDParent: HWNDParent,
+				HWND:       HWND,
 				Rect:       c,
 			}
 		}
-		EnumWindow(w.HWnd)
+		EnumWindow(w.HWND)
 	}
 }
 
@@ -113,25 +112,25 @@ func (w *Window) GetControlByTitleClassRect(title, class string, l, t, r, b int3
 }
 
 // EnumWindow enum all window at any level
-func EnumWindow(hWndParent api.HWND) {
+func EnumWindow(HWNDParent api.HWND) {
 	var child api.HWND
 	var w, c api.RECT
-	api.GetWindowRect(hWndParent, &w)
+	api.GetWindowRect(HWNDParent, &w)
 	for {
-		child = api.FindWindowEx(hWndParent, child, nil, nil)
+		child = api.FindWindowEx(HWNDParent, child, nil, nil)
 
 		//SetWindowText(child, strings.Repeat("12", index))
 		if child == 0 {
 			break
 		} else {
-			class := gui.GetClassName(child)
-			title := gui.GetWindowText(child)
+			class := GetClassName(child)
+			title := GetWindowText(child)
 			api.GetWindowRect(child, &c)
 			c.Left -= w.Left
 			c.Top -= w.Top
 			c.Right -= w.Left
 			c.Bottom -= w.Top
-			EnumResoult(EnumIndex, child, hWndParent, class, title, c)
+			EnumResoult(EnumIndex, child, HWNDParent, class, title, c)
 			EnumIndex++
 			EnumWindow(child)
 		}
@@ -160,7 +159,7 @@ func (w *Window) WaitOpen() {
 // PressButtonByTitle Press Button By Title
 func (w *Window) PressButtonByTitle(title string) {
 	for w.Opend {
-		child := gui.FindWindowEx(w.HWnd, 0, "Button", title)
+		child := FindWindowEx(w.HWND, 0, "Button", title)
 		if child > 0 {
 			PressButton(child)
 			w.Detect()
@@ -175,38 +174,38 @@ func (w *Window) PressButtonByTitle(title string) {
 func (w *Window) Close() {
 	for w.Opend {
 		w.BeforeClose()
-		CloseWin(w.HWnd)
+		CloseWin(w.HWND)
 		w.AfterClose()
 		w.Detect()
 	}
 }
 func (w *Window) hasStyleBits(bits uint32) bool {
-	return hasWindowLongBits(w.HWnd, api.GWL_STYLE, bits)
+	return hasWindowLongBits(w.HWND, api.GWL_STYLE, bits)
 }
 
 func (w *Window) hasExtendedStyleBits(bits uint32) bool {
-	return hasWindowLongBits(w.HWnd, api.GWL_EXSTYLE, bits)
+	return hasWindowLongBits(w.HWND, api.GWL_EXSTYLE, bits)
 }
 
-func hasWindowLongBits(hwnd api.HWND, index int32, bits uint32) bool {
-	value := uint32(api.GetWindowLong(hwnd, index))
+func hasWindowLongBits(HWND api.HWND, index int32, bits uint32) bool {
+	value := uint32(api.GetWindowLong(HWND, index))
 
 	return value&bits == bits
 }
 
-func setWindowVisible(hwnd api.HWND, visible bool) {
+func setWindowVisible(HWND api.HWND, visible bool) {
 	var cmd int32
 	if visible {
 		cmd = api.SW_SHOWNA
 	} else {
 		cmd = api.SW_HIDE
 	}
-	api.ShowWindow(hwnd, cmd)
+	api.ShowWindow(HWND, cmd)
 }
 
 // BringToTop moves the *Window to the top of the keyboard focus order.
 func (w *Window) BringToTop() uint32 {
-	if !api.SetWindowPos(w.HWnd, api.HWND_TOP, 0, 0, 0, 0, api.SWP_NOACTIVATE|api.SWP_NOMOVE|api.SWP_NOSIZE) {
+	if !api.SetWindowPos(w.HWND, api.HWND_TOP, 0, 0, 0, 0, api.SWP_NOACTIVATE|api.SWP_NOMOVE|api.SWP_NOSIZE) {
 		return api.GetLastError()
 	}
 
@@ -215,12 +214,12 @@ func (w *Window) BringToTop() uint32 {
 
 // Focused returns whether the Window has the keyboard input focus.
 func (w *Window) Focused() bool {
-	return w.HWnd == api.GetFocus()
+	return w.HWND == api.GetFocus()
 }
 
 // SetFocus sets the keyboard input focus to the *Window.
 func (w *Window) SetFocus() error {
-	if api.SetFocus(w.HWnd) == 0 {
+	if api.SetFocus(w.HWND) == 0 {
 		return lastError("SetFocus")
 	}
 

@@ -35,5 +35,5 @@ func (c *AfxWnd42Ctrl) SetValue(v string) error {
 		robotgo.KeyTap("v", "ctrl") //粘贴
 		return nil
 	}
-	return ErrHWND
+	return errHWND
 }

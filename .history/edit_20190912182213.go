@@ -27,5 +27,5 @@ func (c *EditCtrl) SetValue(v string) error {
 		SetWindowText(c.HWND, v)
 		return nil
 	}
-	return ErrHWND
+	return errHWND
 }

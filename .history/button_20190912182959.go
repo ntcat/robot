@@ -27,7 +27,7 @@ func (c *ButtonCtrl) Click() error {
 		RectClick(c.HWND)
 		return nil
 	}
-	return ErrHWND
+	return errHWND
 }
 
 // ClickUntilEnd Click Until something end
@@ -36,5 +36,5 @@ func (c *ButtonCtrl) ClickUntilEnd() error {
 		PressButton(c.HWND)
 		return nil
 	}
-	return ErrHWND
+	return errHWND
 }

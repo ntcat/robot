@@ -48,7 +48,7 @@ func (tv *TreeViewCtrl) AddItem(key string, value []int) {
 // ClickItem 点击TV项
 func (tv *TreeViewCtrl) ClickItem(key string) error {
 	if tv == nil || tv.HWND == 0 {
-		return ErrHWND
+		return errHWND
 	}
 
 	var p api.POINT

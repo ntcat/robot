@@ -31,9 +31,8 @@ func (err *Error) Message() string {
 	if err.inner != nil {
 		if walkErr, ok := err.inner.(*Error); ok {
 			return walkErr.Message()
-		} else {
-			return err.inner.Error()
 		}
+		return err.inner.Error()
 	}
 
 	return ""

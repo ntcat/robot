@@ -4,7 +4,7 @@ package robot
 func NewControl() *Control {
 	return &Control{
 		Index: -1,
-		HWnd:  0,
+		HWND:  0,
 	}
 
 }
