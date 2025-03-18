@@ -27,7 +27,18 @@ func TestKeyLayout(t *testing.T) {
 }
 
 func TestChangeLan(t *testing.T) {
-	//ChangeLan(0x8040804) //ZH
-	ChangeLan(0x4090409) //EN
-	//ChangeLan(0x04190419) //russian
+	// timeUnix := time.Now().Unix() //已知的时间戳
+	// formatTimeStr1 := time.Now().Format("2006-01-02") + " 09:30:00"
+	// formatTimeStr := time.Unix(timeUnix, 8).Format("2006-01-02 15:04:05")
+	// fmt.Println(formatTimeStr1) //打
+	// fmt.Println(formatTimeStr)  //打
+
+	// date := time.Now().Format("2006-01-02")
+	// Today0930, _ := time.Parse("2006-01-02 15:04:05", date+" 09:30:00")
+	// if Today0930.Before(Today0930) {
+	// 	fmt.Println(Today0930) //打
+	// }
+	formatTimeStr := 0 - 0%3
+	fmt.Println(formatTimeStr)
+
 }

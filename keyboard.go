@@ -9,9 +9,8 @@ import (
 // GetForegroundWindowKeyboardLayout Get Foreground Window Keyboard Layout
 func GetForegroundWindowKeyboardLayout() uint32 {
 	hWnd := api.GetForegroundWindow()
-	var threadID uint32
-	api.GetWindowThreadProcessId(hWnd, &threadID)
-	layoutID := api.GetKeyboardLayout(threadID)
+	_, pid := api.GetWindowThreadProcessId(hWnd)
+	layoutID := api.GetKeyboardLayout(uint32(pid))
 	return layoutID
 }
 
@@ -28,10 +27,7 @@ Returns True if layout is changed and win32api.SendMessage() output if not
 func ChangeForegroundWindowKeyboardLayout(layoutID uint32) bool {
 	hWnd := api.GetForegroundWindow()
 	result := api.SendMessage(hWnd, api.WM_INPUTLANGCHANGEREQUEST, 0, uintptr(layoutID))
-	if result == 0 {
-		return true
-	}
-	return false
+	return result == 0
 }
 
 // GetKeyboardLayoutList return array like [343434,54656]
